@@ -27,7 +27,7 @@ jobs:
       - name: Install .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 3.1.x
         env: 
           DOTNE_INSTALL_DIR: ${{ runner.workspace }}/dotnet
 
