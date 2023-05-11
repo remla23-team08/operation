@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  app:
+    image: ghcr.io/remla23-team08/app:latest
+    ports:
+      - "8083:8083"
+  model-service:
+    image: ghcr.io/remla23-team08/model-service:latest
+    ports:
+      - "8080:8080"
+      
