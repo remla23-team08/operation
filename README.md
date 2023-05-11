@@ -51,4 +51,5 @@ Versioning of this repository is done automatically using GitHub Actions. The ve
 * [Docker Compose Documentation](https://docs.docker.com/compose/)
 * [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
 * [Semantic Versioning](https://semver.org/)
+* [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
   
