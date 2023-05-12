@@ -1,4 +1,4 @@
-name: Tag & Release
+name: Release Pipeline
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   tag-release:
     name: Tag & Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Generate GitHub App Token
         id: generate_github_app_token
