@@ -9,4 +9,4 @@ spec:
     matchLabels:
       app: model-service-svc
   endpoints:
-    - interval: 1s
+    - interval: 10s
