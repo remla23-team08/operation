@@ -9,4 +9,4 @@ spec:
       name: {{ .name }}-svc
       port:
         number: {{ .port }}
-{{-end}}
+{{- end }}
