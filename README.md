@@ -8,7 +8,7 @@ The `docker-compose.yml` file contains the required configuration to deploy the 
 * `app`: The frontend application itself that sends requests to the backend.
 * `model-service`: The embedded ML model in a Flask webservice
 
-## **Usage**
+## **Usage (Docker-Compose)**
 
 To deploy the application in a local Docker environment, follow these steps:
 
@@ -55,6 +55,45 @@ Assuming everything went well, you should be able to access the application at [
 
 > **Note:** If you want to run the application in the background, you can use the `-d` flag: ```docker compose up -d```
 > This will allow you to continue using the same terminal window without having to start a new process.
+
+## **Usage (Kubernetes)**
+
+To deploy the application in a Kubernetes environment, follow these steps:
+
+1. Make sure you have kubectl installed. If not, follow the instructions [here](https://kubernetes.io/docs/tasks/tools/).
+2. Make sure you have minikube installed. If not, follow the instructions [here](https://minikube.sigs.k8s.io/docs/start/).
+3. Start minikube by running the following command:
+```bash
+minikube start
+```
+4. Once minikube is started, you can deploy the application by running the following command:
+```bash
+kubectl apply -f k8s/app/ && kubectl apply -f k8s/model-service/
+```
+5. Besides the plethora of different `kubectl` commands that you can use from the official docs to view different parts of the system (i.e. pods, services, deployments, etc.), you can also use the Kubernetes dashboard to view the status of the system. To access the dashboard, run the following command:
+```bash
+minikube dashboard
+```
+> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world, you can run the following command. As such there are multiple ways to achieve this:
+> 1. Expose the cluster using the `minikube tunnel` command:
+> ```bash
+> minikube tunnel
+> ```
+> 2. Use port-forwarding to expose the frontend application:
+> ```bash
+> kubectl port-forward svc/app-svc 8083:8083
+> ```
+> This will allow you to access the application at [http://localhost:8083](http://localhost:8083).
+
+## **WIP: Usage (Helm)**
+
+To deploy the application in a Kubernetes environment using Helm, follow these steps:
+
+1. Besides `kubectl` and `minikube`, make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
+2. From within the root of the repository, run the following command:
+```bash
+helm install application ./charts/application
+```
 
 ## **Versioning**
 

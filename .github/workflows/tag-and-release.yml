@@ -43,18 +43,18 @@ jobs:
           useConfigFile: true
           configFilePath: GitVersion.yml
       
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: latest
-          token: ${{ steps.generate_github_app_token.outputs.token }}
+      # - name: Install Helm
+      #   uses: azure/setup-helm@v3
+      #   with:
+      #     version: latest
+      #     token: ${{ steps.generate_github_app_token.outputs.token }}
       
-      - name: Publish Helm Chart
-        uses: helm/chart-releaser-action@v1.5.0
-        with:
-          charts_dir: ./charts
-        env: 
-          CR_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
+      # - name: Publish Helm Chart
+      #   uses: helm/chart-releaser-action@v1.5.0
+      #   with:
+      #     charts_dir: ./charts
+      #   env: 
+      #     CR_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
 
       - name: Tag and Release
         env: 
