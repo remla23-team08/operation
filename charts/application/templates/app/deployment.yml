@@ -17,6 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ .name }}
+        imagePullPolicy: Always
         image: ghcr.io/remla23-team08/app:{{ .version }}
         ports:
         - containerPort: {{ .port }}
