@@ -23,6 +23,6 @@
 .vscode/
 
 # Repository specific files and folders
-helm_charts/
+charts/
 docker-compose.yml
 .github/
