@@ -1,0 +1,12 @@
+app:
+  name: app
+  version: latest
+  replicaCount: 1
+  port: 8083
+modelService:
+  name: model-service
+  version: latest
+  replicaCount: 1
+  port: 8080
+  monitoring:
+    endpointsIntervalSeconds: 10
