@@ -1,0 +1,9 @@
+{{- with .Values.modelService }}
+{{ $appName := "app" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}-configmap
+data:
+  model-service-url: http://{{ .name }}-svc:{{ .port }}/{{ .predictRoute }}
+{{- end }}

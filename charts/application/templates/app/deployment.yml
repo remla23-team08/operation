@@ -21,5 +21,11 @@ spec:
         image: ghcr.io/remla23-team08/app:{{ .version }}
         ports:
         - containerPort: {{ .port }}
+        env:
+        - name: MODEL_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .name }}-configmap
+              key: model-service-url
 {{- end }}
         

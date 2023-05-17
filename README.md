@@ -85,7 +85,7 @@ minikube dashboard
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083).
 
-## **WIP: Usage (Helm)**
+## **Usage (Helm)**
 
 To deploy the application in a Kubernetes environment using Helm, follow these steps:
 
@@ -93,6 +93,25 @@ To deploy the application in a Kubernetes environment using Helm, follow these s
 2. From within the root of the repository, run the following command:
 ```bash
 helm install application ./charts/application
+```
+If everything went well, you should see the following output:
+```bash
+NAME: application
+LAST DEPLOYED: Wed May 17 10:00:00 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```
+
+3. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+```bash
+helm uninstall application
+```
+
+If everything went well, you should see the following output:
+```bash
+release "application" uninstalled
 ```
 
 ## **Versioning**
