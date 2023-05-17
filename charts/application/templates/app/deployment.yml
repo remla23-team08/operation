@@ -1,0 +1,31 @@
+{{- with .Values.app }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-deployment
+  labels:
+    app: {{ .name }}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        imagePullPolicy: Always
+        image: ghcr.io/remla23-team08/app:{{ .version }}
+        ports:
+        - containerPort: {{ .port }}
+        env:
+        - name: MODEL_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .name }}-configmap
+              key: model-service-url
+{{- end }}
+        
