@@ -2,13 +2,70 @@
 
 This repository contains the required Docker-Compose file & other [Kubernetes](https://kubernetes.io/) and [Helm](https://helm.sh/) configuration files to deploy the application.
 
+## **Usage with Monitoring (Helm)**
+
+To deploy the application in a Kubernetes environment using Helm, follow these steps:
+
+1. Besides `kubectl` and `minikube`, make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
+2. Make sure your minkube cluster is up and running before proceeding. If not, run the following command:
+```bash
+minikube start
+```
+3. Make sure you have the full kube-prometheus-stack running and installed:
+```bash
+helm repo $ helm repo add prom-repo https://prometheus-community.github.io/Helm-charts
+helm install prometheus prom-repo/kube-prometheus-stack
+```
+
+4. Once the Prometheus Stack is installed, we can deploy our application chart using Helm. To do so, run the following command:
+```bash
+helm install application ./charts/application
+```
+If everything went well, you should see the following output:
+```bash
+NAME: application
+LAST DEPLOYED: Wed May 17 10:00:00 2023
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```
+> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, open a new terminal and run the following command:
+> ```bash
+> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/prometheus-grafana 3000:80 & kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090
+> ```
+> This will allow you to access the application at [http://localhost:8083](http://localhost:8083). The Grafana dashboard is accessible at [http://localhost:3000](http://localhost:3000)
+
+5. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load.
+
+6. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+```bash
+helm uninstall application
+```
+
+If everything went well, you should see the following output:
+```bash
+release "application" uninstalled
+```
+
+## **Versioning**
+
+Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
+
+## **Additional Resources**
+
+* [Docker Compose Documentation](https://docs.docker.com/compose/)
+* [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
+* [Semantic Versioning](https://semver.org/)
+* [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
+* [OpenLens Build Repo](https://github.com/MuhammedKalkan/OpenLens)
+
+# Alternative Installation Methods
 ## **Docker-Compose**
 
 The `docker-compose.yml` file contains the required configuration to deploy the application in a local Docker environment. The file contains the following services:
 * `app`: The frontend application itself that sends requests to the backend.
 * `model-service`: The embedded ML model in a Flask webservice
-
-## **Usage (Docker-Compose)**
 
 To deploy the application in a local Docker environment, follow these steps:
 
@@ -56,7 +113,7 @@ Assuming everything went well, you should be able to access the application at [
 > **Note:** If you want to run the application in the background, you can use the `-d` flag: ```docker compose up -d```
 > This will allow you to continue using the same terminal window without having to start a new process.
 
-## **Usage (Kubernetes)**
+## **Kubernetes**
 
 To deploy the application in a Kubernetes environment, follow these steps:
 
@@ -74,64 +131,8 @@ kubectl apply -f k8s/app/ && kubectl apply -f k8s/model-service/
 ```bash
 minikube dashboard
 ```
-> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world, you can run the following command. As such there are multiple ways to achieve this:
-> 1. Expose the cluster using the `minikube tunnel` command:
+> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, you can run the following command:
 > ```bash
-> minikube tunnel
-> ```
-> 2. Use port-forwarding to expose the frontend application:
-> ```bash
-> kubectl port-forward svc/app-svc 8083:8083
+> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/prometheus-grafana 3000:80 & kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083).
-
-## **Usage (Helm)**
-
-To deploy the application in a Kubernetes environment using Helm, follow these steps:
-
-1. Besides `kubectl` and `minikube`, make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
-2. Make sure your minkube cluster is up and running before proceeding. If not, run the following command:
-```bash
-minikube start
-```
-3. Because by default the kubernetes API server cannnot find a resource of kind `ServiceMonitor` (which is required by the Prometheus Operator), we need to install the Prometheus Operator first. To do so, run the following command*:
-```bash
-kubectl apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/main/bundle.yaml
-```
-> *NOTE: This command will install the Prometheus Operator in the `default` namespace. Moreover, this is just a temporary solution until we have a proper Helm chart allowing usage of the Prometheus Operator.
-
-4. Once the Prometheus Operator is installed, we can deploy our application chart using Helm. To do so, run the following command:
-```bash
-helm install application ./charts/application
-```
-If everything went well, you should see the following output:
-```bash
-NAME: application
-LAST DEPLOYED: Wed May 17 10:00:00 2023
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-```
-
-5. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
-```bash
-helm uninstall application
-```
-
-If everything went well, you should see the following output:
-```bash
-release "application" uninstalled
-```
-
-## **Versioning**
-
-Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
-
-## **Additional Resources**
-
-* [Docker Compose Documentation](https://docs.docker.com/compose/)
-* [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
-* [Semantic Versioning](https://semver.org/)
-* [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
-* [OpenLens Build Repo](https://github.com/MuhammedKalkan/OpenLens)
