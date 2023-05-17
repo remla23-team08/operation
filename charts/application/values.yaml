@@ -7,7 +7,6 @@ modelService:
   name: model-service
   version: latest
   replicaCount: 1
-  predictRoute: predict
   port: 8080
   monitoring:
     endpointsIntervalSeconds: 10
