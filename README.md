@@ -90,7 +90,17 @@ minikube dashboard
 To deploy the application in a Kubernetes environment using Helm, follow these steps:
 
 1. Besides `kubectl` and `minikube`, make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
-2. From within the root of the repository, run the following command:
+2. Make sure your minkube cluster is up and running before proceeding. If not, run the following command:
+```bash
+minikube start
+```
+3. Because by default the kubernetes API server cannnot find a resource of kind `ServiceMonitor` (which is required by the Prometheus Operator), we need to install the Prometheus Operator first. To do so, run the following command*:
+```bash
+kubectl apply -f https://raw.githubusercontent.com/coreos/prometheus-operator/main/bundle.yaml
+```
+> *NOTE: This command will install the Prometheus Operator in the `default` namespace. Moreover, this is just a temporary solution until we have a proper Helm chart allowing usage of the Prometheus Operator.
+
+4. Once the Prometheus Operator is installed, we can deploy our application chart using Helm. To do so, run the following command:
 ```bash
 helm install application ./charts/application
 ```
@@ -104,7 +114,7 @@ REVISION: 1
 TEST SUITE: None
 ```
 
-3. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+5. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
 helm uninstall application
 ```
@@ -124,4 +134,4 @@ Versioning of this repository is done automatically using GitHub Actions. The ve
 * [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
 * [Semantic Versioning](https://semver.org/)
 * [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
-  
+* [OpenLens Build Repo](https://github.com/MuhammedKalkan/OpenLens)

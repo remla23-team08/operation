@@ -1,14 +1,14 @@
-# {{- with .Values.modelService }}
-# apiVersion: monitoring.coreos.com/v1
-# kind: ServiceMonitor
-# metadata:
-#   name: {{ .name }}-monitor
-#   labels:
-#     release: prometheus
-# spec:
-#   selector:
-#     matchLabels:
-#       app: {{ .name }}-svc
-#   endpoints:
-#     - interval: {{ .monitoring.endpointsIntervalSeconds}}s
-# {{- end }}
+{{- with .Values.modelService }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .name }}-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: {{ .name }}-svc
+  endpoints:
+    - interval: {{ .monitoring.endpointsIntervalSeconds}}s
+{{- end }}
