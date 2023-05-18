@@ -1,0 +1,12 @@
+{{- $files := .Files.Glob "custom-dashboards/*.json" }}
+{{- range $path, $fileContents := $files }}
+apiVersion: v1
+kind: ConfigMap
+  metadata:
+    name: {{ .Values.grafana.customDashboard.dashboardname }}
+    labels:
+      grafana_dashboard: "1"
+      app: {{ $.Release.Name }}-grafana
+  data:
+    {{ .Values.grafana.customDashboard.dashboardname }}.json: {{ $.Files.Get $path | toJson }}
+{{- end }}

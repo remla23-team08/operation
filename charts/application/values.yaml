@@ -10,3 +10,23 @@ modelService:
   port: 8080
   monitoring:
     endpointsIntervalSeconds: 10
+
+# can be set to false if stack is already deployed
+deploy-prom-stack: true
+
+grafana:
+  env:
+    GF_SERVER_ROOT_URL: https://localhost:3000/grafana
+    GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
+  adminUser: admin
+  adminPassword: prom-operator
+  defaultDashboardsEnabled: false
+  customDashboard:
+    enabled: true
+    dashboardname: metrics-vis.json
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+      path: "/grafana(/|$)(.*)"
