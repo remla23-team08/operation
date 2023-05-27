@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
   metadata:
-    name: {{ .Values.grafana.customDashboard.dashboardname }}
+    name: {{ .Values.grafana.customDashboard.name }}
     labels:
       grafana_dashboard: "1"
       app: {{ $.Release.Name }}-grafana

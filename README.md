@@ -13,7 +13,7 @@ minikube start
 ```
 3. Make sure you have the full kube-prometheus-stack running and installed:
 ```bash
-helm repo $ helm repo add prom-repo https://prometheus-community.github.io/Helm-charts
+helm repo add prom-repo https://prometheus-community.github.io/helm-charts
 ```
 
 3. Ensure that all dependencies are fulfilled.

@@ -1,20 +1,54 @@
+# Values for k8s app-related templates
 app:
+  # This is the name of the application (used in labels, service names, etc.)
   name: app
+
+  # This is the docker image tag to use for the application
   version: latest
+
+  # This is the number of replicas to run for the application
   replicaCount: 1
+
+  # This is the port that the application listens on
   port: 8083
+
+  # For app-svc related properties
+  service:
+    # The type to use for the service (default is ClusterIP)
+    type: ClusterIP
+
+# Values for k8s model-service-related templates
 modelService:
+  # This is the name of the model service (used in labels, service names, etc.)
   name: model-service
+
+  # This is the docker image tag to use for the model service
   version: latest
+
+  # This is the number of replicas to run for the model service
   replicaCount: 1
+
+  # This is the port that the model service listens on
   port: 8080
+
+  # For model-service-svc related properties
+  service:
+    # The type to use for the service (default is ClusterIP)
+    type: ClusterIP
+  
+  # For model-service-monitor related properties
   monitoring:
+    # The interval to use for the service monitor (default is 10s)
     endpointsIntervalSeconds: 10
 
+
+
+# TODO: to be improved below
 # can be set to false if stack is already deployed
 deploy-prom-stack: true
 
 grafana:
+  port: 3000
   env:
     GF_SERVER_ROOT_URL: https://localhost:3000/grafana
     GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
@@ -23,7 +57,7 @@ grafana:
   defaultDashboardsEnabled: false
   customDashboard:
     enabled: true
-    dashboardname: metrics-vis.json
+    name: metrics-vis.json
     ingress:
       enabled: true
       annotations:

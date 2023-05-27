@@ -6,9 +6,11 @@ metadata:
   labels:
     app: {{ .name }}-svc
 spec:
+  type: {{ .service.type }}
   selector:
     app: {{ .name }}
   ports:
-    - port: {{ .port }}
+    - name: '{{ .name }}-port'
+      port: {{ .port }}
       targetPort: {{ .port }}
 {{- end }}
