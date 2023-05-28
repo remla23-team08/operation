@@ -43,31 +43,43 @@ jobs:
           useConfigFile: true
           configFilePath: GitVersion.yml
       
-      # - name: Install Helm
-      #   uses: azure/setup-helm@v3
-      #   with:
-      #     version: latest
-      #     token: ${{ steps.generate_github_app_token.outputs.token }}
-      
-      # - name: Publish Helm Chart
-      #   uses: helm/chart-releaser-action@v1.5.0
-      #   with:
-      #     charts_dir: ./charts
-      #   env: 
-      #     CR_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
-
-      - name: Tag and Release
-        env: 
-          GITHUB_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
+      - name: Configure Git Credentials
         run: |
           git config user.name "GitHub Actions [bot]"
           git config user.email "actions@github.com"
+      
+      - name: Bump Helm Chart Version
+        run: |
+          CHART_LOCATION=$(find . -name 'Chart.yaml')
+          sed -i "s/^version: .*/version: ${{ steps.get_gitversion.outputs.majorMinorPatch }}/g" ${CHART_LOCATION}
+          sed -i "s/^appVersion: .*/appVersion: ${{ steps.get_gitversion.outputs.majorMinorPatch }}/g" ${CHART_LOCATION}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+          token: ${{ steps.generate_github_app_token.outputs.token }}
+      
+      - name: Publish Helm Chart
+        uses: helm/chart-releaser-action@v1.5.0
+        with:
+          charts_dir: ./charts
+        env:
+          CR_SKIP_EXISTING: true
+          CR_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
+
+      - name: Commit, Tag and Release new version
+        env: 
+          GITHUB_TOKEN: ${{ steps.generate_github_app_token.outputs.token }}
+        run: |
           git status # This is just to check if the git config worked
           git pull origin main # In case any changes were made since checkout
+          git add $(find . -name 'Chart.yaml') # Only add the updated Chart.yaml
+          git commit -m "Update Helm Chart Version to ${{ steps.get_gitversion.outputs.majorMinorPatch }} [skip ci]]"
           git tag ${{ steps.get_gitversion.outputs.majorMinorPatch }} -m "Release ${{ steps.get_gitversion.outputs.majorMinorPatch }}"
-          git push --tags
+          git push --set-upstream origin $(git branch --show-current) --follow-tags
 
-          # Create a release
+          # Create a GitHub release from the latest tag
           gh release create ${{ steps.get_gitversion.outputs.majorMinorPatch }} \
             --title "${{ steps.get_gitversion.outputs.majorMinorPatch }}" \
             --generate-notes

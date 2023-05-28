@@ -13,11 +13,14 @@ minikube start
 ```
 3. Make sure you have the full kube-prometheus-stack running and installed:
 ```bash
-helm repo $ helm repo add prom-repo https://prometheus-community.github.io/Helm-charts
-helm install prometheus prom-repo/kube-prometheus-stack
+helm repo add prom-repo https://prometheus-community.github.io/helm-charts
 ```
 
-4. Once the Prometheus Stack is installed, we can deploy our application chart using Helm. To do so, run the following command:
+3. Ensure that all dependencies are fulfilled.
+``` bash
+helm dependency update ./charts/application
+```
+4. Once the dependencies are built/updated, we can deploy both the Prometheus stack and our application chart using Helm.  Run the following command:
 ```bash
 helm install application ./charts/application
 ```
@@ -30,13 +33,16 @@ STATUS: deployed
 REVISION: 1
 TEST SUITE: None
 ```
-> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, open a new terminal and run the following command:
+> **NOTE**: 
+> If you already have the kube-prometheus stack installed, go to `charts/application/values.yaml` and change `deploy-prom-stack` to false. This will skip the installation of the prometheus stack.
+> 
+> By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, open a new terminal and run the following command:
 > ```bash
-> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/prometheus-grafana 3000:80 & kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090
+> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/application-grafana 3000:80
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083). The Grafana dashboard is accessible at [http://localhost:3000](http://localhost:3000)
 
-5. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load.
+5. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
 
 6. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
@@ -133,6 +139,6 @@ minikube dashboard
 ```
 > **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, you can run the following command:
 > ```bash
-> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/prometheus-grafana 3000:80 & kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090
+> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083).

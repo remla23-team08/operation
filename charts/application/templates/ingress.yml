@@ -1,0 +1,21 @@
+{{ $applicationName := .Release.Name }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $applicationName }}-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+
+  # This is the default rule for the application
+  {{- with .Values.app}}
+  - http:
+      paths:
+      - path: '/'
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .name }}-svc
+            port:
+              number: {{ .port }}
+  {{- end }}
