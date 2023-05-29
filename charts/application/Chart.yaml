@@ -1,6 +1,6 @@
 apiVersion: v2
 name: application
-description: A Helm chart by REMLA - Team 08 to deploy the application on Kubernetes
+description: A Helm chart by REMLA - Team 08 to deploy the application stack on Kubernetes
 type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
