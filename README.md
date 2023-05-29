@@ -11,27 +11,28 @@ To deploy the application in a Kubernetes environment using Helm, follow these s
 ```bash
 minikube start
 ```
-3. Make sure you have the full kube-prometheus-stack running and installed:
+3. Make sure you have the application's Helm chart repository added to your local Helm installation. If not, run the following command:
 ```bash
-helm repo add prom-repo https://prometheus-community.github.io/helm-charts
+helm repo add remla23-team08 https://remla23-team08.github.io/operation
 ```
 
-3. Ensure that all dependencies are fulfilled.
+4. Ensure that all the repository dependencies are fulfilled and updated.
 ``` bash
-helm dependency update ./charts/application
+helm repo update
 ```
-4. Once the dependencies are built/updated, we can deploy both the Prometheus stack and our application chart using Helm.  Run the following command:
+
+5. Once the team's help repo was added, the application can be deployed. To do so, run the following command:
 ```bash
-helm install application ./charts/application
+helm install application remla23-team08/application
 ```
+
 If everything went well, you should see the following output:
 ```bash
 NAME: application
-LAST DEPLOYED: Wed May 17 10:00:00 2023
+LAST DEPLOYED: Mon May 29 00:19:36 2023
 NAMESPACE: default
 STATUS: deployed
 REVISION: 1
-TEST SUITE: None
 ```
 > **NOTE**: 
 > If you already have the kube-prometheus stack installed, go to `charts/application/values.yaml` and change `deploy-prom-stack` to false. This will skip the installation of the prometheus stack.
@@ -42,9 +43,9 @@ TEST SUITE: None
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083). The Grafana dashboard is accessible at [http://localhost:3000](http://localhost:3000)
 
-5. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
+6. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
 
-6. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+7. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
 helm uninstall application
 ```

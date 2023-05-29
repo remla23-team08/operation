@@ -15,7 +15,7 @@ app:
   # For app-svc related properties
   service:
     # The type to use for the service (default is ClusterIP)
-    type: ClusterIP
+    type: LoadBalancer
 
 # Values for k8s model-service-related templates
 modelService:
@@ -34,7 +34,7 @@ modelService:
   # For model-service-svc related properties
   service:
     # The type to use for the service (default is ClusterIP)
-    type: ClusterIP
+    type: LoadBalancer
   
   # For model-service-monitor related properties
   monitoring:
