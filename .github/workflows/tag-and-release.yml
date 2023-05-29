@@ -52,7 +52,7 @@ jobs:
         run: |
           CHART_LOCATION=$(find . -name 'Chart.yaml')
           sed -i "s/^version: .*/version: ${{ steps.get_gitversion.outputs.majorMinorPatch }}/g" ${CHART_LOCATION}
-          sed -i "s/^appVersion: .*/appVersion: ${{ steps.get_gitversion.outputs.majorMinorPatch }}/g" ${CHART_LOCATION}
+          sed -i "s/^appVersion: .*/appVersion: \"${{ steps.get_gitversion.outputs.majorMinorPatch }}\"/g" ${CHART_LOCATION}
 
       - name: Install Helm
         uses: azure/setup-helm@v3
