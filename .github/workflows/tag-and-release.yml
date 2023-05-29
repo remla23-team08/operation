@@ -60,7 +60,7 @@ jobs:
           version: latest
           token: ${{ steps.generate_github_app_token.outputs.token }}
       
-      - name: Publish Helm Chart
+      - name: Publish Helm Chart to GH Pages
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: ./charts
