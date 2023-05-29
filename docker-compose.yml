@@ -4,6 +4,8 @@ services:
     image: ghcr.io/remla23-team08/app:latest
     ports:
       - "8083:8083"
+    depends_on:
+      - model-service
     environment:
       - MODEL_SERVICE_URL=http://model-service:8080
 
