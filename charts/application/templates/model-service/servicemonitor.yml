@@ -5,12 +5,12 @@ metadata:
   name: {{ .name }}-monitor
   labels:
     app: {{ .name }}-svc
-    release: prometheus
+    release: {{ $.Release.Name }}-prometheus
 spec:
   selector:
     matchLabels:
       app: {{ .name }}-svc
   endpoints:
     - interval: {{ .monitoring.endpointsIntervalSeconds}}s
-      # path: /metrics
+    # path: /metrics
 {{- end }}

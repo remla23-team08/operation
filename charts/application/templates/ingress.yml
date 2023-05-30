@@ -6,10 +6,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-
   # This is the default rule for the application
   {{- with .Values.app}}
-  - http:
+  - host: {{ .host }}
+    http:
       paths:
       - path: '/'
         pathType: Prefix
@@ -18,4 +18,40 @@ spec:
             name: {{ .name }}-svc
             port:
               number: {{ .port }}
+  {{- end }}
+  {{- with .Values.modelService}}
+  - host: {{ .host }}
+    http:
+      paths:
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .name }}-svc
+              port:
+                number: {{ .port }}
+  {{- end }}
+  {{- with .Values.grafana}}
+  - host: {{ .host }}
+    http:
+      paths:
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ $applicationName }}-grafana
+              port:
+                number: {{ .port }}
+  {{- end }}
+  {{- with .Values.prometheus}}
+  - host: {{ .host }}
+    http:
+      paths:
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ $applicationName }}-kube-prometheu-prometheus
+              port:
+                number: {{ .port }}
   {{- end }}
