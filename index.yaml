@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   application:
   - apiVersion: v2
+    appVersion: 0.1.14
+    created: "2023-05-30T15:21:58.790741365Z"
+    dependencies:
+    - condition: deploy-prom-stack
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: ~46.4.1
+    description: A Helm chart by REMLA - Team 08 to deploy the application stack on
+      Kubernetes
+    digest: 4de0284c68e5413539196a60b135743cfc30bfc0e504f8258fd1ee6fa9e64a6e
+    name: application
+    type: application
+    urls:
+    - https://github.com/remla23-team08/operation/releases/download/application-0.1.14/application-0.1.14.tgz
+    version: 0.1.14
+  - apiVersion: v2
     appVersion: 0.1.13
     created: "2023-05-29T17:07:32.259942231Z"
     dependencies:
@@ -93,4 +109,4 @@ entries:
     urls:
     - https://github.com/remla23-team08/operation/releases/download/application-0.1.8/application-0.1.8.tgz
     version: 0.1.8
-generated: "2023-05-29T17:07:32.259970132Z"
+generated: "2023-05-30T15:21:58.790773967Z"
