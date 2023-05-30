@@ -3,8 +3,13 @@ app:
   # This is the name of the application (used in labels, service names, etc.)
   name: app
 
-  # This is the docker image tag to use for the application
-  version: latest
+  # For specifying multiple docker images
+  image:
+    # This is the docker image tag to use for the application (for version 1)
+    version1: latest
+
+    # This is the docker image tag to use for the application (for version 2)
+    version2: latest
 
   # This is the number of replicas to run for the application
   replicaCount: 1
@@ -25,8 +30,13 @@ modelService:
   # This is the name of the model service (used in labels, service names, etc.)
   name: model-service
 
-  # This is the docker image tag to use for the model service
-  version: latest
+  # For specifying multiple docker images
+  image:
+    # This is the docker image tag to use for the model-service (for version 1)
+    version1: latest
+
+    # This is the docker image tag to use for the model-service (for version 2)
+    version2: latest
 
   # This is the number of replicas to run for the model service
   replicaCount: 1

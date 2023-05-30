@@ -2,23 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .name }}-deployment
-  labels:
-    app: {{ .name }}
+  name: {{ .name }}-deployment-v1
+  labels: {app: {{ .name }}, version: v1}
 spec:
   replicas: {{ .replicaCount }}
   selector:
-    matchLabels:
-      app: {{ .name }}
+    matchLabels: {app: {{ .name }}, version: v1}
   template:
     metadata:
-      labels:
-        app: {{ .name }}
+      labels: {app: {{ .name }}, version: v1}
+    {{- with .Values.prometheus }}
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "{{ .port }}"
+    {{- end }}
     spec:
       containers:
       - name: {{ .name }}
         imagePullPolicy: Always
-        image: ghcr.io/remla23-team08/app:{{ .version }}
+        image: ghcr.io/remla23-team08/app:{{ .image.version1 }}
         ports:
         - containerPort: {{ .port }}
         env:
