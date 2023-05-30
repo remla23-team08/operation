@@ -1,33 +1,32 @@
-# {{- with .Values.app }}
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .name }}-deployment-v2
-#   labels: {app: {{ .name }}, version: v2}
-# spec:
-#   replicas: {{ .replicaCount }}
-#   selector:
-#     matchLabels: {app: {{ .name }}, version: v2}
-#   template:
-#     metadata:
-#       labels: {app: {{ .name }}, version: v2}
-#       {{- with .Values.prometheus }}
-#       annotations:
-#         prometheus.io/scrape: "true"
-#         prometheus.io/port: "{{ .port }}"
-#       {{- end }}
-#     spec:
-#       containers:
-#       - name: {{ .name }}
-#         imagePullPolicy: Always
-#         image: ghcr.io/remla23-team08/app:{{ .image.version2 }}
-#         ports:
-#         - containerPort: {{ .port }}
-#         env:
-#         - name: MODEL_SERVICE_URL
-#           valueFrom:
-#             configMapKeyRef:
-#               name: {{ .name }}-configmap
-#               key: model-service-url
-# {{- end }}
+{{ $prometheusPort := .Values.prometheus.port }}
+{{- with .Values.app }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-deployment-v2
+  labels: {app: {{ .name }}, version: v2}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels: {app: {{ .name }}, version: v2}
+  template:
+    metadata:
+      labels: {app: {{ .name }}, version: v2}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ $prometheusPort }}"
+    spec:
+      containers:
+      - name: {{ .name }}
+        imagePullPolicy: Always
+        image: ghcr.io/remla23-team08/app:{{ .image.version2 }}
+        ports:
+        - containerPort: {{ .port }}
+        env:
+        - name: MODEL_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .name }}-configmap
+              key: model-service-url
+{{- end }}
         

@@ -1,3 +1,4 @@
+{{ $prometheusPort := .Values.prometheus.port }}
 {{- with .Values.modelService }}
 apiVersion: apps/v1
 kind: Deployment
@@ -10,13 +11,10 @@ spec:
     matchLabels: {app: {{ .name }}, version: v1}
   template:
     metadata:
-      labels:
-        app: {app: {{ .name }}, version: v1}
-    {{- with .Values.prometheus }}
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "{{ .port }}"
-    {{- end }}
+      labels: {app: {{ .name }}, version: v1}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ $prometheusPort }}"
     spec:
       containers:
       - name: {{ .name }}

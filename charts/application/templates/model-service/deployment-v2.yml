@@ -1,27 +1,25 @@
-# {{- with .Values.modelService }}
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .name }}-deployment-v2
-#   labels: {app: {{ .name }}, version: v2}
-# spec:
-#   replicas: {{ .replicaCount }}
-#   selector:
-#     matchLabels: {app: {{ .name }}, version: v2}
-#   template:
-#     metadata:
-#       labels:
-#         app: {app: {{ .name }}, version: v2}
-#       {{- with .Values.prometheus }}
-#       annotations:
-#         prometheus.io/scrape: "true"
-#         prometheus.io/port: "{{ .port }}"
-#       {{- end }}
-#     spec:
-#       containers:
-#       - name: {{ .name }}
-#         image: ghcr.io/remla23-team08/model-service:{{ .image.version2 }}
-#         imagePullPolicy: Always
-#         ports:
-#         - containerPort: {{ .port }}
-# {{- end }}
+{{ $prometheusPort := .Values.prometheus.port }}
+{{- with .Values.modelService }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}-deployment-v2
+  labels: {app: {{ .name }}, version: v2}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels: {app: {{ .name }}, version: v2}
+  template:
+    metadata:
+      labels: {app: {{ .name }}, version: v1}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ $prometheusPort }}"
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: ghcr.io/remla23-team08/model-service:{{ .image.version2 }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .port }}
+{{- end }}
