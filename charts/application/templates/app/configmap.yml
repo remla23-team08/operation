@@ -5,5 +5,5 @@ kind: ConfigMap
 metadata:
   name: {{ $appName }}-configmap
 data:
-  model-service-url: http://{{ .name }}-svc:{{ .port }}
+  model-service-url: http://{{ .host }}
 {{- end }}

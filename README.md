@@ -34,7 +34,19 @@ NAMESPACE: default
 STATUS: deployed
 REVISION: 1
 ```
-> **NOTE**: 
+
+6. Create a tunnel for the Ingress.
+```bash
+minikube tunnel
+```
+
+7. Access endpoints:
+ - App: [http://app.localhost](http://app.localhost)
+ - Model-Service: [http://service.localhost](http://service.localhost)
+ - Prometheus: [http://prometheus.localhost](http://prometheus.localhost)
+ - Grafana: [http://grafana.localhost](http://grafana.localhost) (username: admin, password: prom-operator)
+
+> **NOTE**:
 > If you already have the kube-prometheus stack installed, go to `charts/application/values.yaml` and change `deploy-prom-stack` to false. This will skip the installation of the prometheus stack.
 > 
 > By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, open a new terminal and run the following command:
@@ -43,9 +55,9 @@ REVISION: 1
 > ```
 > This will allow you to access the application at [http://localhost:8083](http://localhost:8083). The Grafana dashboard is accessible at [http://localhost:3000](http://localhost:3000)
 
-6. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
+8. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
 
-7. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+9. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
 helm uninstall application
 ```

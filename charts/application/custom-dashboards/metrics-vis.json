@@ -514,8 +514,8 @@
     "list": []
   },
   "time": {
-    "from": "2023-05-17T16:56:44.000Z",
-    "to": "2023-05-17T16:58:28.000Z"
+    "from": "now-1h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
