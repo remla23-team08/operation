@@ -5,7 +5,7 @@ metadata:
   name: {{ .name }}-monitor
   labels:
     app: {{ .name }}-svc
-    release: {{ $.Release.Name }}
+    release: {{ $.Release.Name }}-prometheus
 spec:
   selector:
     matchLabels:
