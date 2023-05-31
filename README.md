@@ -67,6 +67,30 @@ If everything went well, you should see the following output:
 release "application" uninstalled
 ```
 
+## **WIP** - Istio Setup
+
+Since the Istio setup is not fully complete, the following steps do not fully reproduce the desired result as stated in the assignment description (this will be addressed in later versions of the application). As such, the helm chart has not been updated and released to include the newly added Istio configuration files, therefore the setup differs from the one described in the [Usage with Monitoring (Helm)](#usage-with-monitoring-helm) section.
+
+To deploy the application in a Kubernetes environment using Istio, follow these steps:
+1. Make sure you have Istio installed. If not, follow the instructions [here](https://istio.io/latest/docs/setup/getting-started/).
+2. Start the minikube cluster with Istio enabled by running the following command:
+```bash
+minikube start --cpus=4 --memory=8192 # As much memory as possible is recommended
+```
+3. Start istio by running the following command:
+```bash
+istioctl install
+```
+4. Once the cluster is up and running, you can deploy the application by running the following command:
+```bash
+helm install application ./charts/application # --set deploy-prom-stack=false in case you want to skip the Prometheus stack installation
+```
+5. Create a tunnel for the Ingress.
+```bash
+minikube tunnel
+```
+> **NOTE:** The ingress for the istio setup is present but overlaps with the already available ingress. More fine-tuning is required to make it work, so feel free to inspect the created resources for the scope of this assignment.
+
 ## **Versioning**
 
 Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
