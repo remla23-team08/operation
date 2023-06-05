@@ -14,8 +14,8 @@ version: 0.1.14
 # It is recommended to use it with quotes.
 appVersion: "0.1.14"
 
-dependencies:
-  - name: kube-prometheus-stack
-    version: ~46.4.1
-    repository: https://prometheus-community.github.io/helm-charts
-    condition: deploy-prom-stack
+#dependencies:
+#  - name: kube-prometheus-stack
+#    version: ~46.4.1
+#    repository: https://prometheus-community.github.io/helm-charts
+#    condition: deploy-prom-stack

@@ -18,15 +18,16 @@ app:
   # For app-svc related properties
   service:
     # The type to use for the service (default is ClusterIP)
-    type: LoadBalancer
+    type: ClusterIP
 
 # Values for k8s model-service-related templates
 modelService:
   # This is the name of the model service (used in labels, service names, etc.)
   name: model-service
 
-  # This is the docker image tag to use for the model service
-  version: latest
+  # These are the versions/docker image tags to use for the model service
+  version1: latest
+  version2: latest
 
   # This is the number of replicas to run for the model service
   replicaCount: 1
@@ -40,7 +41,7 @@ modelService:
   # For model-service-svc related properties
   service:
     # The type to use for the service (default is ClusterIP)
-    type: LoadBalancer
+    type: ClusterIP
   
   # For model-service-monitor related properties
   monitoring:
@@ -50,6 +51,9 @@ modelService:
 prometheus:
   # This is the name of prometheus
   name: prometheus
+
+  # This is the release name of prometheus
+  release: prometheus
 
   # This is the host for prometheus
   host: prometheus.localhost
@@ -64,7 +68,7 @@ deploy-prom-stack: true
 grafana:
   host: grafana.localhost
   name: grafana
-  port: 3000
+  port: 80
   env:
     GF_SERVER_ROOT_URL: https://localhost:3000/grafana
     GF_SERVER_SERVE_FROM_SUB_PATH: 'true'

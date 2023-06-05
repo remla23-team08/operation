@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+{{- with .Values.app }}
+metadata:
+  name: {{ .name }}-entry-service
+spec:
+  gateways:
+    - {{ $.Release.Name }}-gateway
+  hosts:
+    - {{ .host }}
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: {{ .name }}-svc
+            port:
+              number: {{ .port }}
+{{- end }}

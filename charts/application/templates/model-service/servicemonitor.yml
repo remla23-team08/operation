@@ -4,13 +4,12 @@ kind: ServiceMonitor
 metadata:
   name: {{ .name }}-monitor
   labels:
-    app: {{ .name }}-svc
-    release: {{ $.Release.Name }}-prometheus
+    app: {{ .name }}-monitor
+    release: {{ $.Values.prometheus.release }}
 spec:
   selector:
     matchLabels:
       app: {{ .name }}-svc
   endpoints:
     - interval: {{ .monitoring.endpointsIntervalSeconds}}s
-    # path: /metrics
 {{- end }}
