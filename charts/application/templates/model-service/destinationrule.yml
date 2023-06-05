@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 {{- with .Values.modelService }}
 metadata:
-  name: {{ .name }}-rule
+  name: {{ .name }}-destination-rule
 spec:
   host: {{ .name }}-svc
   subsets:
