@@ -2,32 +2,52 @@
 
 This repository contains the required Docker-Compose file & other [Kubernetes](https://kubernetes.io/) and [Helm](https://helm.sh/) configuration files to deploy the application.
 
-## **Usage with Monitoring (Helm)**
-
-To deploy the application in a Kubernetes environment using Helm, follow these steps:
-
-1. Besides `kubectl` and `minikube`, make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
-2. Make sure your minkube cluster is up and running before proceeding. If not, run the following command:
+## **Kubernetes Deployment with Istio**
+To deploy the application in a Kubernetes environment with Istio, follow these steps:
+### 1. Minikube Installation and Start-up
+- Install `kubectl` and `minikube`, if not already done.
+- Make sure your minikube cluster is up and running before proceeding. If not, run the following command:
 ```bash
-minikube start
+minikube start --memory=16384 --cpus=4
 ```
-3. Make sure you have the application's Helm chart repository added to your local Helm installation. If not, run the following command:
+- Enable the Ingress addon in your cluster, if not already done.
 ```bash
-helm repo add remla23-team08 https://remla23-team08.github.io/operation
+minikube addons enable ingress
 ```
 
-4. Ensure that all the repository dependencies are fulfilled and updated.
+### 2. Prometheus Installation
+- Make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
+- Add the prometheus Helm chart repository to your local Helm installation:
+```bash
+helm repo add prom-repo https://prometheus-community.github.io/helm-charts
+```
+
+- Ensure that all the repository dependencies are fulfilled and updated.
 ``` bash
 helm repo update
 ```
 
-5. Once the team's help repo was added, the application can be deployed. To do so, run the following command:
+- Once the helm repo has been added, prometheus can be deployed:
 ```bash
-helm install application remla23-team08/application
+helm install prometheus prom-repo/kube-prometheus-stack
 ```
 
-If everything went well, you should see the following output:
+### 3. Istio Installation
+- Install Istio into the cluster. More detailed instructions can be found [here](https://istio.io/latest/docs/setup/install/istioctl/)
 ```bash
+istioctl install
+```
+- Instruct Istio to automatically inject proxy containers to new pods in default namespace.
+```bash
+kubectl label ns default istio-injection=enabled
+```
+
+### 3. Application Deployment
+
+- Deploy the application with the command below. If istio injection is successful, app and model-service pods should have 2/2 containers running:
+```bash
+helm install application ./charts/application
+...
 NAME: application
 LAST DEPLOYED: Mon May 29 00:19:36 2023
 NAMESPACE: default
@@ -35,35 +55,21 @@ STATUS: deployed
 REVISION: 1
 ```
 
-6. Create a tunnel for the Ingress.
+- Create a tunnel for the Istio Ingress Gateway:
 ```bash
 minikube tunnel
 ```
 
-7. Access endpoints:
- - App: [http://app.localhost](http://app.localhost)
- - Model-Service: [http://service.localhost](http://service.localhost)
- - Prometheus: [http://prometheus.localhost](http://prometheus.localhost)
- - Grafana: [http://grafana.localhost](http://grafana.localhost) (username: admin, password: prom-operator)
+- Access features at the following endpoints:
+    - App: [http://app.localhost](http://app.localhost)
+    - Model-Service: [http://service.localhost](http://service.localhost)
+    - Prometheus: [http://prometheus.localhost](http://prometheus.localhost)
+    - Grafana: [http://grafana.localhost](http://grafana.localhost) (username: admin, password: prom-operator). The custom dashboard is automatically imported under Restaurant Metrics.
 
-> **NOTE**:
-> If you already have the kube-prometheus stack installed, go to `charts/application/values.yaml` and change `deploy-prom-stack` to false. This will skip the installation of the prometheus stack.
-> 
-> By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, open a new terminal and run the following command:
-> ```bash
-> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080 & kubectl port-forward svc/application-grafana 3000:80
-> ```
-> This will allow you to access the application at [http://localhost:8083](http://localhost:8083). The Grafana dashboard is accessible at [http://localhost:3000](http://localhost:3000)
-
-8. To use the custom Grafana dashboard, open the `metrics-vis.json` inside charts/application/templates, and copy all its contents. Open the Grafana dashboard at [http://localhost:3000](http://localhost:3000) and login (username: admin, password: prom-operator). Then import the metrics-vis.json file found in ./charts/application/, and the custom dashboard will load. 
-
-9. If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
+- If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
 helm uninstall application
-```
-
-If everything went well, you should see the following output:
-```bash
+...
 release "application" uninstalled
 ```
 

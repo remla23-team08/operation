@@ -2,22 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .name }}-deployment
+  name: {{ .name }}-deployment-v2
   labels:
     app: {{ .name }}
+    version: v2
 spec:
   replicas: {{ .replicaCount }}
   selector:
     matchLabels:
       app: {{ .name }}
+      version: v2
   template:
     metadata:
       labels:
         app: {{ .name }}
+        version: v2
     spec:
       containers:
       - name: {{ .name }}
-        image: ghcr.io/remla23-team08/model-service:{{ .version }}
+        image: ghcr.io/remla23-team08/model-service:{{ .version2 }}
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .port }}
