@@ -1,4 +1,4 @@
-{{ - with .Values.rate-limit }}
+{{- with .Values.rateLimit }}
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
@@ -37,4 +37,4 @@ spec:
                   cluster_name: outbound|8081||ratelimit.default.svc.cluster.local
                   authority: ratelimit.default.svc.cluster.local
               transport_api_version: V3
-{{ - end }}
+{{- end }}

@@ -61,7 +61,7 @@ prometheus:
   # This is the port that prometheus listens on
   port: 9090
 
-rate-limit:
+rateLimit:
   # Domain name used in rate limit
   domain: app-ratelimit
 
