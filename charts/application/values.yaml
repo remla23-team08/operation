@@ -42,7 +42,7 @@ modelService:
   service:
     # The type to use for the service (default is ClusterIP)
     type: ClusterIP
-  
+
   # For model-service-monitor related properties
   monitoring:
     # The interval to use for the service monitor (default is 10s)
@@ -60,6 +60,10 @@ prometheus:
 
   # This is the port that prometheus listens on
   port: 9090
+
+rate-limit:
+  # Domain name used in rate limit
+  domain: app-ratelimit
 
 # TODO: to be improved below
 # can be set to false if stack is already deployed
