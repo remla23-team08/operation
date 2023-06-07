@@ -1,0 +1,19 @@
+{{- with .Values.rateLimit }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ratelimit-config
+data:
+  config.yaml: |
+    domain: {{ .domain }}
+    descriptors:
+      - key: PATH
+        value: "/"
+        rate_limit:
+          unit: minute
+          requests_per_unit: 10
+      - key: PATH
+        rate_limit:
+          unit: minute
+          requests_per_unit: 100
+{{- end }}
