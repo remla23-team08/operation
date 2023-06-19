@@ -124,7 +124,7 @@ Assuming everything went well, you should be able to access the application at [
 > **Note:** If you want to run the application in the background, you can use the `-d` flag: ```docker compose up -d```
 > This will allow you to continue using the same terminal window without having to start a new process.
 
-1. If you want to use a custom model for the `model-service` Docker image, there is the option to uncomment the `volumes` part from within the `docker-compose.yml` file. This will mount the `ml-model` directory to the container and allow you to use a custom model, provided this folder exists and contains the required files:
+3. If you want to use a custom model for the `model-service` Docker image, there is the option to uncomment the `volumes` part from within the `docker-compose.yml` file. This will mount the `ml-model` directory to the container and allow you to use a custom model, provided this folder exists and contains the required files:
 
 ```yml
 ...
