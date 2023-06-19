@@ -92,23 +92,9 @@ The `docker-compose.yml` file contains the required configuration to deploy the 
 * `app`: The frontend application itself that sends requests to the backend.
 * `model-service`: The embedded ML model in a Flask webservice
 
-To deploy the application in a local Docker environment, follow these steps:
+To deploy the application in a local Docker environment, follow these steps while in the root directory of the repository:
 
-1. Clone the repository:
-```bash
-# When using SSH keys (recommended)
-git clone git@github.com:remla23-team08/operation.git
-
-# When using HTTPS
-git clone https://github.com/remla23-team08/operation.git
-```
-
-2. Navigate to the `operation` directory:
-```bash
-cd operation
-```
-
-3. Login to GitHub Package Registry:
+1. Login to GitHub Package Registry:
 ```bash
 docker login ghcr.io
 ```
@@ -116,7 +102,7 @@ docker login ghcr.io
 > **Note:** You will have to login with your GitHub username and have a personal access token with the `read:packages` scope.
 > For more information on how to create a personal access token, see [this link](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
-4. Once the login to GitHub Package Registry is successful, you can deploy the application by running the following command:
+2. Once the login to GitHub Package Registry is successful, you can deploy the application by running the following command:
 ```bash
 docker compose up
 ```
@@ -137,6 +123,20 @@ Assuming everything went well, you should be able to access the application at [
 
 > **Note:** If you want to run the application in the background, you can use the `-d` flag: ```docker compose up -d```
 > This will allow you to continue using the same terminal window without having to start a new process.
+
+1. If you want to use a custom model for the `model-service` Docker image, there is the option to uncomment the `volumes` part from within the `docker-compose.yml` file. This will mount the `ml-model` directory to the container and allow you to use a custom model, provided this folder exists and contains the required files:
+
+```yml
+...
+services:
+  model-service:
+    ...
+    # volumes:
+    #   - ./ml-model/c1_BoW_Sentiment_Model.pkl:/root/ml-model/c1_BoW_Sentiment_Model.pkl
+    #   - ./ml-model/c2_Classifier_Sentiment_Model:/root/ml-model/c2_Classifier_Sentiment_Model
+    ...
+...
+```
 
 ## **Kubernetes**
 

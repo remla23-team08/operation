@@ -8,9 +8,19 @@ services:
       - model-service
     environment:
       - MODEL_SERVICE_URL=http://model-service:8080
+    networks:
+      - app-network
 
   model-service:
     image: ghcr.io/remla23-team08/model-service:latest
     ports:
       - "8080:8080"
-      
+    # volumes:
+    #   - ./ml-model/c1_BoW_Sentiment_Model.pkl:/root/ml-model/c1_BoW_Sentiment_Model.pkl
+    #   - ./ml-model/c2_Classifier_Sentiment_Model:/root/ml-model/c2_Classifier_Sentiment_Model
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
