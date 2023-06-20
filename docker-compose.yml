@@ -2,17 +2,19 @@ version: "3.8"
 services:
   app:
     image: ghcr.io/remla23-team08/app:latest
+    container_name: app
     ports:
       - "8083:8083"
     depends_on:
       - model-service
     environment:
-      - MODEL_SERVICE_URL=http://model-service:8080
+      - MODEL_SERVICE_URL=http://localhost:8080
     networks:
       - app-network
 
   model-service:
     image: ghcr.io/remla23-team08/model-service:latest
+    container_name: model-service
     ports:
       - "8080:8080"
     # volumes:
