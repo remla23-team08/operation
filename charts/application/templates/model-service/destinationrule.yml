@@ -6,10 +6,10 @@ metadata:
 spec:
   host: {{ .name }}-svc
   subsets:
-  - name: v1
+  - name: {{ .version1.name }}
     labels:
-      version: v1
-  - name: v2
+      version: {{ .version1.name }}
+  - name: {{ .version2.name }}
     labels:
-      version: v2
+      version: {{ .version2.name }}
 {{- end }}

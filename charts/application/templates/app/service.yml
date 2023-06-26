@@ -10,7 +10,7 @@ spec:
   selector:
     app: {{ .name }}
   ports:
-    - name: '{{ .name }}-port'
+    - name: http-{{ .name }}-port
       port: {{ .port }}
       targetPort: {{ .port }}
 {{- end }}

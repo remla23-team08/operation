@@ -4,49 +4,50 @@ This repository contains the required Docker-Compose file & other [Kubernetes](h
 
 ## **Kubernetes Deployment with Istio**
 To deploy the application in a Kubernetes environment with Istio, follow these steps:
-### 1. Minikube Installation and Start-up
-- Install `kubectl` and `minikube`, if not already done.
+### 1. Minikube and Istio Installation
+- Install [kubectl](https://kubernetes.io/docs/tasks/tools/) and [minikube](https://minikube.sigs.k8s.io/docs/start/).
 - Make sure your minikube cluster is up and running before proceeding. If not, run the following command:
 ```bash
 minikube start --memory=16384 --cpus=4
 ```
-- Enable the Ingress addon in your cluster, if not already done.
+- Enable the Ingress addon in your cluster.
 ```bash
 minikube addons enable ingress
 ```
 
-### 2. Prometheus Installation
-- Make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
-- Add the prometheus Helm chart repository to your local Helm installation:
-```bash
-helm repo add prom-repo https://prometheus-community.github.io/helm-charts
-```
-
-- Ensure that all the repository dependencies are fulfilled and updated.
-``` bash
-helm repo update
-```
-
-- Once the helm repo has been added, prometheus can be deployed:
-```bash
-helm install prometheus prom-repo/kube-prometheus-stack
-```
-
-### 3. Istio Installation
-- Install Istio into the cluster. More detailed instructions can be found [here](https://istio.io/latest/docs/setup/install/istioctl/)
+- Install Istio into the cluster. More detailed instructions can be found [here](https://istio.io/latest/docs/setup/install/istioctl/).
 ```bash
 istioctl install
 ```
+
 - Instruct Istio to automatically inject proxy containers to new pods in default namespace.
 ```bash
 kubectl label ns default istio-injection=enabled
 ```
 
+### 2. Monitoring
+- To use monitoring tools such as Prometheus and Grafana, deploy the Istio addons.
+```bash
+kubectl apply -f addons
+```
+
+- Use the command below to access the monitoring dashboards, replacing `<addon-name>` with the desired addon. Possible addon names are: prometheus, grafana, kiali, jaeger.
+```bash
+istioctl dashboard <addon-name>
+```
+In the Grafana UI, the custom dashboard is automatically imported under `custom/Restaurant Metrics`.
+
+- The addon installation can be removed with:
+```bash
+kubectl delete -f addons
+```
+
 ### 3. Application Deployment
+- Make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
 
 - Deploy the application with the command below. If istio injection is successful, app and model-service pods should have 2/2 containers running:
 ```bash
-helm install application ./charts/application
+helm install application charts/application
 ...
 NAME: application
 LAST DEPLOYED: Mon May 29 00:19:36 2023
@@ -60,11 +61,9 @@ REVISION: 1
 minikube tunnel
 ```
 
-- Access features at the following endpoints:
-    - App: [http://app.localhost](http://app.localhost)
-    - Model-Service: [http://service.localhost](http://service.localhost)
-    - Prometheus: [http://prometheus.localhost](http://prometheus.localhost)
-    - Grafana: [http://grafana.localhost](http://grafana.localhost) (username: admin, password: prom-operator). The custom dashboard is automatically imported under Restaurant Metrics.
+- Access the app components at the following endpoints:
+    - App frontend: [http://app.localhost](http://app.localhost)
+    - Model-Service backend: [http://service.localhost](http://service.localhost)
 
 - If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
@@ -73,17 +72,23 @@ helm uninstall application
 release "application" uninstalled
 ```
 
-## **Versioning**
+## Additional Use Case
+As an additional use case, a rate limiter has been introduced that limits the request rate of the user.
 
-Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
+The user can send a maximum of 20 requests per minute to the application's homepage ([http://app.localhost](http://app.localhost)). Once this limit is crossed, the user is blocked.
 
-## **Additional Resources**
+## Alerts
+An alert will be fired if the user sends over 15 requests per minute for 2 minutes to the model-service backend. The alert can be viewed in Prometheus under the `Alerts` tab as `HighRequestRate`. 
 
-* [Docker Compose Documentation](https://docs.docker.com/compose/)
-* [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
-* [Semantic Versioning](https://semver.org/)
-* [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
-* [OpenLens Build Repo](https://github.com/MuhammedKalkan/OpenLens)
+```bash
+istioctl dashboard prometheus
+```
+
+## Continuous Experimentation
+For a continuous experimentation, two versions of model-service are deployed. One acts as the `stable` release while the other as the `canary` that is being tested for an eventual full rollout.
+The first time the user sends a request to model-service, the version that will serve the request is selected randomly.
+Once this version has been selected, a cookie is set (`stable` or `canary`) to ensure the same version is used for future requests.
+To send requests to the other version, the cookie should either be changed or cleared.
 
 # Alternative Installation Methods
 ## **Docker-Compose**
@@ -138,26 +143,14 @@ services:
 ...
 ```
 
-## **Kubernetes**
+## **Versioning**
 
-To deploy the application in a Kubernetes environment, follow these steps:
+Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
 
-1. Make sure you have kubectl installed. If not, follow the instructions [here](https://kubernetes.io/docs/tasks/tools/).
-2. Make sure you have minikube installed. If not, follow the instructions [here](https://minikube.sigs.k8s.io/docs/start/).
-3. Start minikube by running the following command:
-```bash
-minikube start
-```
-4. Once minikube is started, you can deploy the application by running the following command:
-```bash
-kubectl apply -f k8s/app/ && kubectl apply -f k8s/model-service/
-```
-5. Besides the plethora of different `kubectl` commands that you can use from the official docs to view different parts of the system (i.e. pods, services, deployments, etc.), you can also use the Kubernetes dashboard to view the status of the system. To access the dashboard, run the following command:
-```bash
-minikube dashboard
-```
-> **NOTE**: By default, the cluster is not exposed to the outside world (that also means you cannot access the dashboard from your host machine). To expose the cluster to the outside world using port-forwarding, you can run the following command:
-> ```bash
-> kubectl port-forward svc/app-svc 8083:8083 & kubectl port-forward svc/model-service-svc 8080:8080
-> ```
-> This will allow you to access the application at [http://localhost:8083](http://localhost:8083).
+## **Additional Resources**
+
+* [Docker Compose Documentation](https://docs.docker.com/compose/)
+* [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
+* [Semantic Versioning](https://semver.org/)
+* [Release Engineerign TU Delft Course Website](https://se.ewi.tudelft.nl/remla/assignments/a1-images-and-releases/)
+* [OpenLens Build Repo](https://github.com/MuhammedKalkan/OpenLens)
