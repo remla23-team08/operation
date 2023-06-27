@@ -2,25 +2,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .name }}-deployment-v1
+  name: {{ .name }}-deployment-{{ .version1.name }}
   labels:
     app: {{ .name }}
-    version: v1
+    version: {{ .version1.name }}
 spec:
   replicas: {{ .replicaCount }}
   selector:
     matchLabels:
       app: {{ .name }}
-      version: v1
+      version: {{ .version1.name }}
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .port }}"
       labels:
         app: {{ .name }}
-        version: v1
+        version: {{ .version1.name }}
     spec:
       containers:
       - name: {{ .name }}
-        image: ghcr.io/remla23-team08/model-service:{{ .version1 }}
+        image: ghcr.io/remla23-team08/model-service:{{ .version1.tag }}
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .port }}

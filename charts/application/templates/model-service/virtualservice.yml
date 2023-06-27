@@ -12,17 +12,46 @@ spec:
     - match:
         - uri:
             prefix: /
+          headers:
+            cookie:
+              regex: ".*{{ .name }}-version={{ .version1.name }}.*"
       route:
         - destination:
             host: {{ .name }}-svc
-            subset: v1
+            subset: {{ .version1.name }}
             port:
               number: {{ .port }}
-          weight: 50
+    - match:
+        - uri:
+            prefix: /
+          headers:
+            cookie:
+              regex: ".*{{ .name }}-version={{ .version2.name }}.*"
+      route:
         - destination:
             host: {{ .name }}-svc
-            subset: v2
+            subset: {{ .version2.name }}
             port:
               number: {{ .port }}
-          weight: 50
+    - route:
+        - destination:
+            host: {{ .name }}-svc
+            subset: {{ .version1.name }}
+            port:
+              number: {{ .port }}
+          weight: {{ .version1.weight }}
+          headers:
+            response:
+              set:
+                Set-Cookie: "{{ .name }}-version={{ .version1.name }}"
+        - destination:
+            host: {{ .name }}-svc
+            subset: {{ .version2.name }}
+            port:
+              number: {{ .port }}
+          weight: {{ .version2.weight }}
+          headers:
+            response:
+              set:
+                Set-Cookie: "{{ .name }}-version={{ .version2.name }}"
 {{- end }}
