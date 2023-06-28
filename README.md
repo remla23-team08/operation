@@ -13,6 +13,8 @@ This repository contains the required Docker-Compose file & other [Kubernetes](h
     - [2. Monitoring](#2-monitoring)
     - [3. Application Deployment](#3-application-deployment)
   - [⚙️ **Kubernetes Deployment with Istio (Script)**](#️-kubernetes-deployment-with-istio-script)
+    - [Linux \& MacOS](#linux--macos)
+    - [Windows](#windows)
   - [➕ **Additional Use Case**](#-additional-use-case)
   - [⚠️ **Alerts**](#️-alerts)
   - [🧪 **Continuous Experimentation**](#-continuous-experimentation)
@@ -140,6 +142,8 @@ release "application" uninstalled
 
 ## ⚙️ **Kubernetes Deployment with Istio (Script)**
 
+### Linux & MacOS
+
 To automatically deploy the application in a Kubernetes environment with Istio, follow the ensuing steps.
 By doing this, you will effectively be running the same commands as in the previous section.
 
@@ -149,6 +153,18 @@ By doing this, you will effectively be running the same commands as in the previ
 ./scripts/deploy_cluster.sh --memory=<specify-memory-here> --cpus=<specify-cpus-here>
 ```
 > **Note**: You can omit specifying the `--memory` and `--cpu` parameters. The default values are `16384` MB and `4` CPUs respectively. However, it might be the case that your machine does not have enough resources to run the application with these default values. In that case, you can specify lower values for these parameters.
+
+### Windows
+
+To automatically deploy the application in a Kubernetes environment with Istio, follow the ensuing steps.
+
+1. Make sure you have `kubectl` and `minikube` installed.
+2. Run the following command while in the root directory of the repository:
+```powershell
+.\scripts\deploy_cluster.ps1 --memory <specify-memory-here> --cpus <specify-cpus-here>
+```
+
+> **Note**: Compared to the bash script in the previous section, this hasn't been fully battle-tested, therefore you might run into some issues. If you do, please let us know.
 
 ## ➕ **Additional Use Case**
 As an additional use case, a rate limiter has been introduced that limits the request rate of the user.

@@ -40,7 +40,7 @@ done
 
 # Start minikube
 echo "INFO: Starting minikube..."
-minikube start --memory=16384 --cpus=4
+minikube start --memory=${MEMORY} --cpus=${CPUS}
 
 # Wait for minikube to be up and running (this can take a while)
 echo "INFO: Waiting for minikube to be up and running..."
