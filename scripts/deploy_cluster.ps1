@@ -1,41 +1,10 @@
 # This script will deploy the application in a Kubernetes cluster (using Minikube)
 # It assumes that you already have kubectl and minikube installed and configured
 
-# Show usage function
-function show_usage {
-  echo "Usage: deploy_cluster.ps1 [options]"
-  echo "Options:"
-  echo "  -h, --help:                  Show this help message and exit"
-  echo "  -m=MEMORY, --memory=MEMORY:  Amount of RAM memory to allocate to the minikube VM (default: 16384)"
-  echo "  -c=CPUS, --cpus=CPUS:        Number of CPUs to allocate to the minikube VM (default: 4)"
-}
-
-$MEMORY = '16384'
-$CPUS = '4'
-
-# Get CLI arguments
-while ($args.Length -ge 1) {
-  switch ($args[0]) {
-    '-h', '--help' {
-      show_usage
-      exit 0
-    }
-    '-m=*', '--memory=*' {
-      $MEMORY = $args[0] -replace '^-m=|--memory='
-      $args = $args[1..($args.Length-1)]
-    }
-    '-c=*', '--cpus=*' {
-      $CPUS = $args[0] -replace '^-c=|--cpus='
-      $args = $args[1..($args.Length-1)]
-    }
-    default {
-      Write-Host "ERROR: Unknown argument: $args[0]"
-      show_usage
-      exit 1
-    }
-  }
-  $args = $args[1..($args.Length-1)]
-}
+param (
+  [string]$MEMORY = '16384',
+  [string]$CPUS = '4'
+)
 
 # Start minikube
 echo "INFO: Starting minikube..."

@@ -161,7 +161,7 @@ To automatically deploy the application in a Kubernetes environment with Istio, 
 1. Make sure you have `kubectl` and `minikube` installed.
 2. Run the following command while in the root directory of the repository:
 ```powershell
-.\scripts\deploy_cluster.ps1 --memory <specify-memory-here> --cpus <specify-cpus-here>
+./scripts/deploy_cluster.ps1 -MEMORY <specify-memory-here> -CPUS <specify-cpus-here>
 ```
 
 > **Note**: Compared to the bash script in the previous section, this hasn't been fully battle-tested, therefore you might run into some issues. If you do, please let us know.
