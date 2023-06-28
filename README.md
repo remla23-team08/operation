@@ -2,12 +2,29 @@
 
 This repository contains the required Docker-Compose file & other [Kubernetes](https://kubernetes.io/) and [Helm](https://helm.sh/) configuration files to deploy the application.
 
-## **Code Overview**
+## 📑 **Table of Contents**
+
+- [Operation](#operation)
+  - [📑 **Table of Contents**](#-table-of-contents)
+  - [💻 **Code Overview**](#-code-overview)
+  - [🐳 **Docker-Compose**](#-docker-compose)
+  - [☸️ **Kubernetes Deployment with Istio (Manual)**](#️-kubernetes-deployment-with-istio-manual)
+    - [1. Minikube and Istio Installation](#1-minikube-and-istio-installation)
+    - [2. Monitoring](#2-monitoring)
+    - [3. Application Deployment](#3-application-deployment)
+  - [⚙️ **Kubernetes Deployment with Istio (Script)**](#️-kubernetes-deployment-with-istio-script)
+  - [➕ **Additional Use Case**](#-additional-use-case)
+  - [⚠️ **Alerts**](#️-alerts)
+  - [🧪 **Continuous Experimentation**](#-continuous-experimentation)
+  - [📚 **Versioning**](#-versioning)
+  - [🌟 **Additional Resources**](#-additional-resources)
+
+## 💻 **Code Overview**
 Here is a brief overview of the project's codebase.
 - `docker-compose.yml`: Contains the configuration for Docker-Compose.
 - `charts/application`: Contains the Helm chart that serves as an alternative installation of the application.
 
-## **Docker-Compose**
+## 🐳 **Docker-Compose**
 
 The `docker-compose.yml` file contains the required configuration to deploy the application in a local Docker environment. The file contains the following services:
 * `app`: The frontend application itself that sends requests to the backend.
@@ -51,8 +68,7 @@ Assuming everything went well, you should be able to access the application at [
 - `environment`: Sets environment variables for the container. In the file, the environment variable `MODEL_SERVICE_URL` specifies the url the application should use to communicate with the model service.
 - `volumes`: Specifies which directories or files on the host machine should be mounted as volumes inside the container. If you want to use custom models for serving the predictions, you can provide a `ml-model` directory to the container with the required files `c1_BoW_Sentiment_Model.pkl`, `c2_Classifier_Sentiment_Model`.
 
-
-## **Kubernetes Deployment with Istio**
+## ☸️ **Kubernetes Deployment with Istio (Manual)**
 To deploy the application in a Kubernetes environment with Istio, follow these steps:
 ### 1. Minikube and Istio Installation
 - Install [kubectl](https://kubernetes.io/docs/tasks/tools/) and [minikube](https://minikube.sigs.k8s.io/docs/start/).
@@ -122,31 +138,41 @@ helm uninstall application
 release "application" uninstalled
 ```
 
-## Additional Use Case
+## ⚙️ **Kubernetes Deployment with Istio (Script)**
+
+To automatically deploy the application in a Kubernetes environment with Istio, follow the ensuing steps.
+By doing this, you will effectively be running the same commands as in the previous section.
+
+1. Make sure you have `kubectl` and `minikube` installed.
+2. Run the following command while in the root directory of the repository:
+```bash
+./scripts/deploy_cluster.sh --memory=<specify-memory-here> --cpus=<specify-cpus-here>
+```
+> **Note**: You can omit specifying the `--memory` and `--cpu` parameters. The default values are `16384` MB and `4` CPUs respectively. However, it might be the case that your machine does not have enough resources to run the application with these default values. In that case, you can specify lower values for these parameters.
+
+## ➕ **Additional Use Case**
 As an additional use case, a rate limiter has been introduced that limits the request rate of the user.
 
 The user can send a maximum of 20 requests per minute to the application's homepage ([http://app.localhost](http://app.localhost)). Once this limit is crossed, the user is blocked.
 
-## Alerts
+## ⚠️ **Alerts**
 An alert will be fired if the user sends over 15 requests per minute for 2 minutes to the model-service backend. The alert can be viewed in Prometheus under the `Alerts` tab as `HighRequestRate`. 
 
 ```bash
 istioctl dashboard prometheus
 ```
 
-## Continuous Experimentation
+## 🧪 **Continuous Experimentation**
 For a continuous experimentation, two versions of model-service are deployed. One acts as the `stable` release while the other as the `canary` that is being tested for an eventual full rollout.
 The first time the user sends a request to model-service, the version that will serve the request is selected randomly.
 Once this version has been selected, a cookie is set (`stable` or `canary`) to ensure the same version is used for future requests.
 To send requests to the other version, the cookie should either be changed or cleared.
 
-
-## **Versioning**
+## 📚 **Versioning**
 
 Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
 
-
-## **Additional Resources**
+## 🌟 **Additional Resources**
 
 * [Docker Compose Documentation](https://docs.docker.com/compose/)
 * [GitHub Package Registry Documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry)
