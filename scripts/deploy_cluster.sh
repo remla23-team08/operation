@@ -56,7 +56,7 @@ minikube addons enable ingress
 
 # Install istio into the cluster
 echo "INFO: Installing istio into the cluster..."
-istioctl install
+istioctl install -y
 
 # Wait for istio to be up and running (this can take a while)
 echo "INFO: Waiting for istio to be up and running..."
