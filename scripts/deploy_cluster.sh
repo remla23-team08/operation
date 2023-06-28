@@ -22,11 +22,11 @@ while [ $# -ge 1 ]; do
       show_usage
       exit 0
       ;;
-    -m|--memory)
+    -m=*|--memory=*)
       MEMORY="${1#*=}"
       shift
       ;;
-    -c|--cpus)
+    -c=*|--cpus=*)
       CPUS="${1#*=}"
       shift
       ;;
