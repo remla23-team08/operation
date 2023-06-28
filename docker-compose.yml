@@ -17,9 +17,8 @@ services:
     container_name: model-service
     ports:
       - "8080:8080"
-    # volumes:
-    #   - ./ml-model/c1_BoW_Sentiment_Model.pkl:/root/ml-model/c1_BoW_Sentiment_Model.pkl
-    #   - ./ml-model/c2_Classifier_Sentiment_Model:/root/ml-model/c2_Classifier_Sentiment_Model
+    volumes:
+      - ./ml-model:/root/ml-model
     networks:
       - app-network
 
