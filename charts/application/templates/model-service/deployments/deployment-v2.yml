@@ -27,4 +27,11 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .port }}
+        volumeMounts:
+          - name: model-volume-{{ .version1.name }}
+            mountPath: /root/ml-model
+      volumes:
+        - name: model-volume-{{ .version1.name }}
+          hostPath:
+            path: ml-model-stable
 {{- end }}
