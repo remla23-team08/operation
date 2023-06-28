@@ -145,6 +145,7 @@ To send requests to the other version, the cookie should either be changed or cl
 
 Versioning of this repository is done automatically using GitHub Actions. The versioning is done using the standard Semantic Versioning (SemVer) format. Version bumps are done automatically when a PR is merged to the `main` branch. To achieve this, we are using the GitVersion tool. For more information on how to use GitVersion, see [this link](https://gitversion.net/docs/).
 
+
 ## **Additional Resources**
 
 * [Docker Compose Documentation](https://docs.docker.com/compose/)
