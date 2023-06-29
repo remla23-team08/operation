@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   application:
   - apiVersion: v2
+    appVersion: 0.1.27
+    created: "2023-06-29T15:46:37.816916009Z"
+    description: A Helm chart by REMLA - Team 08 to deploy the application stack on
+      Kubernetes
+    digest: f0725a480d2fffcda84115cfb8945b4c5a7ea78214542da8ef55badea3a5bcab
+    name: application
+    type: application
+    urls:
+    - https://github.com/remla23-team08/operation/releases/download/application-0.1.27/application-0.1.27.tgz
+    version: 0.1.27
+  - apiVersion: v2
     appVersion: 0.1.26
     created: "2023-06-29T15:32:47.041828368Z"
     description: A Helm chart by REMLA - Team 08 to deploy the application stack on
@@ -241,4 +252,4 @@ entries:
     urls:
     - https://github.com/remla23-team08/operation/releases/download/application-0.1.8/application-0.1.8.tgz
     version: 0.1.8
-generated: "2023-06-29T15:32:47.04236557Z"
+generated: "2023-06-29T15:46:37.81702891Z"
