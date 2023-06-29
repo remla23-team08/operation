@@ -104,7 +104,7 @@ data:
                   },
                   "editorMode": "builder",
                   "exemplar": false,
-                  "expr": "sum(predictions_created{version=\"stable\"})",
+                  "expr": "sum(predictions_total{version=\"stable\"})",
                   "format": "time_series",
                   "hide": false,
                   "instant": true,
