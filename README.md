@@ -111,7 +111,7 @@ kubectl delete -f addons
 ### 3. Application Deployment
 - Make sure you have Helm installed. If not, follow the instructions [here](https://helm.sh/docs/intro/install/).
 
-- Deploy the application with the command below. If istio injection is successful, app and model-service pods should have 2/2 containers running:
+- Deploy the application with the command below.
 ```bash
 helm install application charts/application
 ...
@@ -122,6 +122,16 @@ STATUS: deployed
 REVISION: 1
 ```
 
+If istio injection is successful, app and model-service pods should have 2/2 containers running. It might take a while for them to start running so wait a bit and check their status.
+```bash
+kubectl get pods
+...
+app-deployment                    2/2     Running   0               1s
+model-service-deployment-canary   2/2     Running   0               1s
+model-service-deployment-stable   2/2     Running   0               1s
+
+```
+
 - Create a tunnel for the Istio Ingress Gateway:
 ```bash
 minikube tunnel
@@ -130,6 +140,7 @@ minikube tunnel
 - Access the app components at the following endpoints:
     - App frontend: [http://app.localhost](http://app.localhost)
     - Model-Service backend: [http://service.localhost](http://service.localhost)
+    - API documentation: [http://service.localhost/apidocs](http://service.localhost/apidocs)
 
 - If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
@@ -150,6 +161,18 @@ By doing this, you will effectively be running the same commands as in the previ
 ```
 > **Note**: You can omit specifying the `--memory` and `--cpu` parameters. The default values are `16384` MB and `4` CPUs respectively. However, it might be the case that your machine does not have enough resources to run the application with these default values. In that case, you can specify lower values for these parameters.
 
+## 🧪 **Continuous Experimentation**
+For a continuous experimentation, two versions of model-service are deployed. One acts as the `stable` release while the other as the `canary` that is being tested for an eventual full rollout.
+The first time the user sends a request to model-service, the version that will serve the request is selected randomly.
+Once this version has been selected, a cookie is set (`stable` or `canary`) to ensure the same version is used for future requests.
+To send requests to the other version, the cookie should either be changed or cleared.
+
+One method to change the cookie in the browser is going to the Developer Tools (Ctrl-Shift-J) -> Console, and entering the command below in the console with the desired version:
+
+```bash
+document.cookie="model-service-version=canary"
+```
+
 ## ➕ **Additional Use Case**
 As an additional use case, a rate limiter has been introduced that limits the request rate of the user.
 
@@ -161,12 +184,6 @@ An alert will be fired if the user sends over 15 requests per minute for 2 minut
 ```bash
 istioctl dashboard prometheus
 ```
-
-## 🧪 **Continuous Experimentation**
-For a continuous experimentation, two versions of model-service are deployed. One acts as the `stable` release while the other as the `canary` that is being tested for an eventual full rollout.
-The first time the user sends a request to model-service, the version that will serve the request is selected randomly.
-Once this version has been selected, a cookie is set (`stable` or `canary`) to ensure the same version is used for future requests.
-To send requests to the other version, the cookie should either be changed or cleared.
 
 ## 📚 **Versioning**
 
