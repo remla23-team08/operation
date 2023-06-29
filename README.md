@@ -101,7 +101,6 @@ kubectl apply -f addons
 ```bash
 istioctl dashboard <addon-name>
 ```
-In the Grafana UI, the custom dashboard is automatically imported under `custom/Restaurant Metrics`.
 
 - The addon installation can be removed with:
 ```bash
@@ -172,6 +171,27 @@ One method to change the cookie in the browser is going to the Developer Tools (
 ```bash
 document.cookie="model-service-version=canary"
 ```
+
+The hypothesis is that this canary model should outperform the stable model in generating accurate predictions. If the hypothesis is correct, the canary model can be fully rolled out.
+A custom Grafana dashboard is used to monitor and compare the relevant metrics for each deployed version.
+Grafana can be accessed with the following command:
+```bash
+istioctl dashboard grafana
+```
+In the Grafana UI, the custom dashboard is automatically imported under `custom/Restaurant Metrics`.
+
+These Prometheus metrics are used for the experiment:
+- predictions_total
+- neg_predictions_total
+- pos_predictions_total
+- true_neg_predictions_total
+- true_pos_predictions_total
+- false_pos_predictions_total
+- false_neg_predictions_total
+- model_accuracy
+
+If model_accuracy is higher over an extended period of time, the hypothesis is accepted, otherwise rejected.
+
 
 ## ➕ **Additional Use Case**
 As an additional use case, a rate limiter has been introduced that limits the request rate of the user.
