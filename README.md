@@ -137,9 +137,9 @@ minikube tunnel
 ```
 
 - Access the app components at the following endpoints:
-    - App frontend: [http://app.localhost](http://app.localhost)
-    - Model-Service backend: [http://service.localhost](http://service.localhost)
-    - API documentation: [http://service.localhost/apidocs](http://service.localhost/apidocs)
+  - App frontend: [http://app.localhost](http://app.localhost)
+  - Model-Service backend: [http://service.localhost](http://service.localhost)
+  - API documentation: [http://service.localhost/apidocs](http://service.localhost/apidocs)
 
 - If you want to easily clean the cluster from all the resources created by the Helm chart, you can run the following command:
 ```bash
@@ -165,11 +165,16 @@ For a continuous experimentation, two versions of model-service are deployed. On
 The first time the user sends a request to model-service, the version that will serve the request is selected randomly.
 Once this version has been selected, a cookie is set (`stable` or `canary`) to ensure the same version is used for future requests.
 To send requests to the other version, the cookie should either be changed or cleared.
+Customized requests can be sent using tools such as Postman or by executing curl commands as shown below.
 
-One method to change the cookie in the browser is going to the Developer Tools (Ctrl-Shift-J) -> Console, and entering the command below in the console with the desired version:
-
+For submitting a review:
 ```bash
-document.cookie="model-service-version=canary"
+curl -X POST "http://service.localhost/predict" -H "accept: application/json" -H "Content-Type: application/json" -H "Cookie: model-service-version=stable" -d "{ \"restaurantName\": \"Gourmet Haven\", \"review\": \"This excellent.\"}"
+```
+
+For submitting feedback on prediction accuracy:
+```bash
+curl -X POST "http://service.localhost/model-accuracy" -H "accept: application/json" -H "Content-Type: application/json" -H "Cookie: model-service-version=stable" -d "{ \"restaurantName\": \"Gourmet Haven\", \"accurate\": true, \"prediction\": 1}"
 ```
 
 The hypothesis is that this canary model should outperform the stable model in generating accurate predictions. If the hypothesis is correct, the canary model can be fully rolled out.
@@ -199,7 +204,7 @@ As an additional use case, a rate limiter has been introduced that limits the re
 The user can send a maximum of 20 requests per minute to the application's homepage ([http://app.localhost](http://app.localhost)). Once this limit is crossed, the user is blocked.
 
 ## ⚠️ **Alerts**
-An alert will be fired if the user sends over 15 requests per minute for 2 minutes to the model-service backend. The alert can be viewed in Prometheus under the `Alerts` tab as `HighRequestRate`. 
+An alert will be fired if the user sends over 15 requests per minute for 2 minutes to the model-service backend. The alert can be viewed in Prometheus under the `Alerts` tab as `HighRequestRate`.
 
 ```bash
 istioctl dashboard prometheus
