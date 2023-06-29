@@ -30,7 +30,7 @@ modelService:
     # Version name
     name: canary
     # Version image tag
-    tag: latest
+    tag: 0.1.26-canary
     # Version traffic distribution
     weight: 30
 
