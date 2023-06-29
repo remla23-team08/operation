@@ -177,7 +177,6 @@ For submitting feedback on prediction accuracy:
 curl -X POST "http://service.localhost/model-accuracy" -H "accept: application/json" -H "Content-Type: application/json" -H "Cookie: model-service-version=stable" -d "{ \"restaurantName\": \"Gourmet Haven\", \"accurate\": true, \"prediction\": 1}"
 ```
 
-
 The hypothesis is that this canary model should outperform the stable model in generating accurate predictions. If the hypothesis is correct, the canary model can be fully rolled out.
 A custom Grafana dashboard is used to monitor and compare the relevant metrics for each deployed version.
 Grafana can be accessed with the following command:
